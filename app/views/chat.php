@@ -16,61 +16,7 @@ $currentUser = $currentUser ?? ['username' => 'You'];
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/css/custom.css" rel="stylesheet">
-
-  <style>
-    body.bg-body { background-color: #fafafa; }
-
-    /* Following List */
-    .following-list .list-group-item {
-      border-radius: 12px;
-      margin-bottom: 0.5rem;
-      transition: background 0.2s;
-    }
-    .following-list .list-group-item:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* Chat container */
-    .chat-container {
-      height: 70vh;
-      overflow-y: auto;
-      padding: 1rem;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .message {
-      max-width: 70%;
-      padding: 0.6rem 1rem;
-      border-radius: 20px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      word-break: break-word;
-    }
-
-    .message.outgoing {
-      background-color: #0d6efd;
-      color: #fff;
-      margin-left: auto;
-      text-align: right;
-    }
-
-    .message.incoming {
-      background-color: #f0f0f0;
-      margin-right: auto;
-    }
-
-    .message-time {
-      font-size: 0.7rem;
-      color: #6c757d;
-      margin-top: 2px;
-    }
-
-    #chat-input { border-radius: 50px; }
-  </style>
+  <link href="/css/chat.css" rel="stylesheet">
 </head>
 <body class="bg-body text-body">
 
@@ -106,7 +52,7 @@ if (is_file($hdr)) include $hdr;
         </div>
 
         <!-- Chat Messages -->
-        <div id="chat-container" class="chat-container flex-grow-1">
+        <div id="chat-container" class="chat-container flex-grow-1" data-chat-with-id="<?= (int)$chatWithId ?>">
           <?php if (!$chatWithId): ?>
             <p class="text-muted text-center mt-5">Select a user to start chatting</p>
           <?php endif; ?>
@@ -127,49 +73,7 @@ if (is_file($hdr)) include $hdr;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const chatContainer = document.getElementById('chat-container');
-const chatForm = document.getElementById('chat-form');
-const chatInput = document.getElementById('chat-input');
-const chatWithId = <?= (int)$chatWithId ?>;
-
-function appendMessage(text, outgoing = true) {
-  const div = document.createElement('div');
-  div.classList.add('message', outgoing ? 'outgoing' : 'incoming');
-  div.textContent = text;
-
-  const time = document.createElement('div');
-  time.classList.add('message-time');
-  const now = new Date();
-  time.textContent = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  div.appendChild(time);
-
-  const wrapper = document.createElement('div');
-  wrapper.classList.add('d-flex', outgoing ? 'justify-content-end' : '');
-  wrapper.appendChild(div);
-
-  chatContainer.appendChild(wrapper);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-// Handle send
-chatForm?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const message = chatInput.value.trim();
-  if (!message) return;
-  
-  // Append locally
-  appendMessage(message, true);
-  chatInput.value = '';
-
-  // Send to backend
-  await fetch('/chat/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ toUserId: chatWithId, message })
-  });
-});
-</script>
+<script src="/js/chat.js"></script>
 
 </body>
 </html>

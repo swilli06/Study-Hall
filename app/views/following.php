@@ -22,6 +22,7 @@ if (is_file($hdr)) include $hdr;
     <input 
       type="text" 
       name="search" 
+      id="searchInput"
       class="form-control me-2" 
       placeholder="Search followers..." 
       value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
@@ -46,7 +47,7 @@ if (is_file($hdr)) include $hdr;
       </div>
       <?php endforeach; ?>
   </div>
-     <?php else: ?>
+  <?php else: ?>
     <?php if (!empty($_GET['search'])): ?>
         <p class="text-center text-muted">No followers found matching "<?= htmlspecialchars($_GET['search']) ?>"</p>
     <?php else: ?>
@@ -54,20 +55,7 @@ if (is_file($hdr)) include $hdr;
     <?php endif; ?>
   <?php endif; ?>
 </div>
-<script>
-function filterFollowing() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const cards = document.querySelectorAll(".follower-card");
-
-  cards.forEach(card => {
-    const username = card.querySelector(".follower-username").textContent.toLowerCase();
-    const match = username.includes(filter);
-    card.parentElement.style.display = match ? "" : "none";
-  });
-}
-</script>
-
+<script src="/js/following.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

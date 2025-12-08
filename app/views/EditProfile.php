@@ -6,18 +6,7 @@
   <title>Edit Profile - <?= htmlspecialchars($currentUser['username']) ?> | Study Hall</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    /* Cards and inputs adapt to dark mode */
-    [data-bs-theme="dark"] .card,
-    [data-bs-theme="dark"] .form-control {
-      background-color: #0a0101ff;
-      color: #e0e0e0;
-      border-color: #444;
-    }
-    [data-bs-theme="dark"] .form-control::placeholder {
-      color: #aaa;
-    }
-  </style>
+  <link href="/css/EditProfile.css" rel="stylesheet">
 </head>
 <body class="bg-body text-body">
 
