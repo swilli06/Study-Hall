@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . '/theme-init.php';
 // Make sure $currentUser is available, or fetch it if not
 if (!isset($profilePicUrl) && isset($_SESSION['uid'])) {
     $profileModel = new Profile($this->db);
@@ -24,10 +25,6 @@ $isProfilePage = str_starts_with($currentPath, 'profile');
 
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Theme toggle button ALWAYS visible -->
-    <button id="themeToggle" class="btn btn-outline-light btn-sm me-3" title="Toggle Theme">
-        <i id="themeIcon" class="bi bi-moon-stars"></i>
-    </button>
 
     <?php if (!in_array($currentPath, $excludeHeader, true)): ?>
         <!-- Navbar brand -->
@@ -150,45 +147,3 @@ $isProfilePage = str_starts_with($currentPath, 'profile');
     border-color: var(--bs-border-color) !important;
   }
 </style>
-
-<!-- Theme toggle script -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const root = document.documentElement;
-    const btn  = document.getElementById('themeToggle');
-    const icon = document.getElementById('themeIcon');
-
-    function setTheme(theme) {
-        root.setAttribute('data-bs-theme', theme);
-        localStorage.setItem('theme', theme);
-        document.cookie = "theme=" + theme + "; path=/; max-age=31536000";
-        updateIcon(theme);
-    }
-
-    function updateIcon(theme) {
-        if (!icon) return;
-        icon.className = theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars';
-    }
-
-    const cookieTheme = document.cookie.match(/(?:^|;\s*)theme=(light|dark)/)?.[1];
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = cookieTheme || storedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
-
-    if (btn) {
-        btn.addEventListener('click', () => {
-            const nextTheme = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-            setTheme(nextTheme);
-        });
-    }
-
-    try {
-        if (!storedTheme && window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                setTheme(e.matches ? 'dark' : 'light');
-            });
-        }
-    } catch (_) {}
-});
-</script>
