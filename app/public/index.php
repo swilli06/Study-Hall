@@ -297,6 +297,18 @@ elseif ($uri === 'messages/unread-count') {
     exit;
 }
 
+elseif ($uri === 'ai/comment-response') {
+    if (!is_post()) {
+        http_response_code(405);
+        echo 'Method Not Allowed';
+        exit;
+    }
+
+    require __DIR__ . '/../ai/aiCommentResponse.php';
+    exit;
+}
+
+
 // -------------------------------------------------------------
 // 404 Fallback
 // -------------------------------------------------------------

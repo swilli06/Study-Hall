@@ -146,7 +146,7 @@ $csrf = function_exists('csrf_token') ? csrf_token() : $_SESSION['csrf'];
 
     <div class="card border-0 shadow-sm mb-4" id="aiCommentCard">
       <div class="card-header d-flex">
-        <button class="btn btn-link p-0 tab-btn active" data-target="commentPanel">
+        <button class="btn btn-link p-0 tab-btn me-3 active" data-target="commentPanel">
           <i class="bi bi-chat-left-text me-1"></i> Add Comment
         </button>
         <button class="btn btn-link me-3 p-0 tab-btn" data-target="aiPanel">
@@ -195,6 +195,11 @@ $csrf = function_exists('csrf_token') ? csrf_token() : $_SESSION['csrf'];
 
 
   </div>
+
+  <script>
+    window.postBodyForAI = <?= json_encode($post['body'] ?? '') ?>;
+  </script>
+
 
   <script src="/js/postCommentsAI.js"></script>
   <script src="/js/theme-init.js"></script>
