@@ -46,6 +46,10 @@ $excludeHeader = [
             <a href="/logout" class="btn btn-outline-light btn-sm me-2" title="Logout">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
+            <!-- Theme toggle button ALWAYS visible -->
+            <button id="themeToggle" class="btn btn-outline-light btn-sm me-3" title="Toggle Theme">
+            <i id="themeIcon" class="bi bi-moon-stars"></i>
+            </button>
             <a href="/profile" title="Profile">
                 <img
                     src="<?= htmlspecialchars($profilePicUrl ?? '/images/default-avatar.jpg') ?>"
