@@ -14,6 +14,7 @@
 // Include header/navbar
 $hdr = __DIR__ . '/header.php';
 if (is_file($hdr)) include $hdr;
+include __DIR__ . '/theme-init.php'; 
 ?>
 
 <div class="container mt-5" style="max-width: 900px;">
@@ -52,6 +53,13 @@ if (is_file($hdr)) include $hdr;
           </div>
         </div>
 
+        <div class="d-flex mb-1 justify-content-between align-items-center">
+          <button type="button" id="themeToggle" class="btn btn-med border" title="Toggle Theme">
+            <i id="themeIcon" class="bi bi-moon-stars me-1"></i>
+            <span id="themeText">Toggle dark/light mode</span>"
+          </button>
+        </div>
+        
         <div class="d-flex justify-content-end">
           <a href="/profile" class="btn btn-outline-secondary me-2">Cancel</a>
           <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -61,6 +69,63 @@ if (is_file($hdr)) include $hdr;
     </div>
   </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        const themeKey = 'data-bs-theme';
+        
+        // Define classes for Light Mode (Black button, White text, Black border)
+        const lightModeClasses = ['bg-black', 'text-white', 'border-black'];
+        // Define classes for Dark Mode (White button, Black text, White border)
+        const darkModeClasses = ['bg-white', 'text-black', 'border-white'];
+
+        /**
+         * Sets the theme, updates the icon, button style, and saves the preference.
+         * @param {string} theme - 'light' or 'dark'
+         */
+        function setTheme(theme) {
+            // Apply theme to <html> tag
+            document.documentElement.setAttribute(themeKey, theme);
+            localStorage.setItem(themeKey, theme);
+
+            if (theme === 'dark') {
+                // Apply dark mode button appearance (White background, Black text, White border)
+                themeToggle.classList.remove(...lightModeClasses);
+                themeToggle.classList.add(...darkModeClasses);
+                
+                // Update icon to sun (hint to switch to light mode)
+                themeIcon.classList.remove('bi-moon-stars');
+                themeIcon.classList.add('bi-brightness-high'); 
+            } else {
+                // Apply light mode button appearance (Black background, White text, Black border)
+                themeToggle.classList.remove(...darkModeClasses);
+                themeToggle.classList.add(...lightModeClasses);
+                
+                // Update icon to moon (hint to switch to dark mode)
+                themeIcon.classList.remove('bi-brightness-high');
+                themeIcon.classList.add('bi-moon-stars'); 
+            }
+        }
+
+        // 1. Initial Load: Check for saved theme or default to system preference
+        const savedTheme = localStorage.getItem(themeKey);
+        const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        
+        // Apply the saved theme or system preference
+        const initialTheme = savedTheme || systemPreference;
+        setTheme(initialTheme);
+        
+        // 2. Event Listener for Toggle Button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute(themeKey);
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+    });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

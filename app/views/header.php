@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . '/theme-init.php';
 // Make sure $currentUser is available, or fetch it if not
 if (!isset($profilePicUrl) && isset($_SESSION['uid'])) {
     $profileModel = new Profile($this->db);
@@ -24,7 +25,6 @@ $excludeHeader = [
 
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    
 
     <?php if (!in_array($currentPath, $excludeHeader, true)): ?>
         <!-- Navbar brand -->
