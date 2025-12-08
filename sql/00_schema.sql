@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS board (
   created_by  INT UNSIGNED NOT NULL,
   name        VARCHAR(100) NOT NULL,
   description VARCHAR(255) NULL,
+  banner_path VARCHAR(255) NULL,
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_board_course_name (course_id, name),
   INDEX idx_board_created_by (created_by),

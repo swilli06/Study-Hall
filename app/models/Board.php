@@ -7,32 +7,32 @@ class Board
 {
     public static function all(): array {
         $pdo = Database::getConnection();
-        $stmt = $pdo->query('SELECT id, name, description FROM board ORDER BY name');
+        $stmt = $pdo->query('SELECT id, name, description, banner_path FROM board ORDER BY name');
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
     public static function findById(int $id): ?array {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare('SELECT id, name, description, created_at, created_by FROM board WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT id, name, description, banner_path created_at, created_by FROM board WHERE id = :id');
         $stmt->execute([':id'=>$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
 
-    public static function create(string $name, string $description, ?int $userId = null): int {
+    public static function create(string $name, string $description, ?int $userId = null, ?string $banner_path=null): int {
         $pdo = Database::getConnection();
         if ($userId === null && session_status() === PHP_SESSION_ACTIVE && !empty($_SESSION['uid'])) {
             $userId = (int)$_SESSION['uid'];
         }
-        $stmt = $pdo->prepare('INSERT INTO board (name, description, created_by) VALUES (:n, :d, :u)');
-        $stmt->execute([':n'=>$name, ':d'=>$description, ':u'=>$userId]);
+        $stmt = $pdo->prepare('INSERT INTO board (name, description, created_by, banner_path) VALUES (:n, :d, :u, :b)');
+        $stmt->execute([':n'=>$name, ':d'=>$description, ':u'=>$userId, ':b'=>$banner_path]);
         return (int)$pdo->lastInsertId();
     }
 
-    public static function updateOwned(int $id, int $userId, string $name, string $description): bool {
+    public static function updateOwned(int $id, int $userId, string $name, string $description, ?string $banner_path=null): bool {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare('UPDATE board SET name = :n, description = :d WHERE id = :id AND created_by = :u');
-        return $stmt->execute([':n'=>$name, ':d'=>$description, ':id'=>$id, ':u'=>$userId]);
+        $stmt = $pdo->prepare('UPDATE board SET name = :n, description = :d, banner_path= :b WHERE id = :id AND created_by = :u');
+        return $stmt->execute([':n'=>$name, ':d'=>$description, ':id'=>$id, ':u'=>$userId, ':b'=>$banner_path]);
     }
 
     public static function isOwnedBy(int $id, int $userId): bool {
@@ -58,7 +58,7 @@ class Board
     public static function listPage(int $limit, int $offset): array {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
-            SELECT b.id, b.name, b.description,
+            SELECT b.id, b.name, b.description b.banner_path,
                 (SELECT COUNT(*) FROM post p WHERE p.board_id = b.id) AS post_count
             FROM board b
             ORDER BY b.id DESC
@@ -73,7 +73,7 @@ class Board
     public static function getCreatedBoards(int $userId): array {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
-            SELECT b.id, b.name, b.description, b.created_at,
+            SELECT b.id, b.name, b.description, b.created_at, b.banner_path,
                 (SELECT COUNT(*) FROM post p WHERE p.board_id = b.id) AS post_count
             FROM board b
             WHERE b.created_by = :user_id

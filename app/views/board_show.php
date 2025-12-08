@@ -8,7 +8,7 @@ $db = Database::getConnection();
 $boardId = (int)($_GET['id'] ?? 0);
 if ($boardId <= 0) { http_response_code(400); echo "Invalid board id"; exit; }
 
-$stmt = $db->prepare("SELECT id, name, description, created_at, created_by FROM board WHERE id = :id");
+$stmt = $db->prepare("SELECT id, name, description, created_at, created_by, banner_path FROM board WHERE id = :id");
 $stmt->bindValue(':id', $boardId, PDO::PARAM_INT);
 $stmt->execute();
 $board = $stmt->fetch();
@@ -86,6 +86,17 @@ $followerCount = BoardFollow::followersCount($boardId);
 
 <section class="py-4">
   <div class="container" style="max-width: 1000px;">
+    <div class="board-banner mb-3">
+      <?php if (!empty($board['banner_path'])): ?>
+        <img 
+          src="<?= htmlspecialchars($board['banner_path']) ?>" 
+          class="img-fluid w-100 rounded" 
+          alt="Board banner"
+          style="height: 200px; width: 100%; object-fit: cover;"
+        >
+      <?php endif; ?>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="d-flex align-items-center gap-3">
         <h3 class="mb-0"><?= htmlspecialchars($board['name']) ?></h3>

@@ -69,12 +69,35 @@ class BoardController extends BaseController
 
         $name = trim((string)($_POST['name'] ?? ''));
         $desc = trim((string)($_POST['description'] ?? ''));
+        $bannerPath = null;
+        
+        
+
+        if (!empty($_POST['banner_cropped'])) {
+            $base64 = $_POST['banner_cropped'];
+
+            // Extracts the base64 part if a cropped image has been provided 
+            if (strpos($base64, ',') !== false) {
+                [, $data] = explode(',', $base64);
+            } else {
+                $data = $base64;
+            }
+
+            $image = base64_decode($data);
+
+            $fileName = 'board_' . uniqid() . '.png';
+            $savePath = __DIR__ . '/../public/uploads/' . $fileName;
+            file_put_contents($savePath, $image);
+
+            $bannerPath = '/uploads/' . $fileName;
+        }
+
         if ($name === '') {
             $this->render('board_create', ['mode'=>'create','error'=>'Name required','old'=>['name'=>$name,'description'=>$desc]]);
             return;
         }
 
-        $boardId = (int)Board::create($name, $desc, (int)$_SESSION['uid']);
+        $boardId = (int)Board::create($name, $desc, (int)$_SESSION['uid'], $bannerPath);
         if ($boardId > 0) { header('Location: /board?id=' . $boardId); exit; }
 
         $this->render('board_create', ['mode'=>'create','error'=>'Failed to create board.','old'=>['name'=>$name,'description'=>$desc]]);
@@ -105,12 +128,34 @@ class BoardController extends BaseController
 
         $name = trim((string)($_POST['name'] ?? ''));
         $desc = trim((string)($_POST['description'] ?? ''));
+
+        $bannerPath = null;
+
+        if (!empty($_POST['banner_cropped'])) {
+            $base64 = $_POST['banner_cropped'];
+
+            // Extracts the base64 part if a cropped image has been provided
+            if (strpos($base64, ',') !== false) {
+                [, $data] = explode(',', $base64);
+            } else {
+                $data = $base64;
+            }
+
+            $image = base64_decode($data);
+
+            $fileName = 'board_' . uniqid() . '.png';
+            $savePath = __DIR__ . '/../public/uploads/' . $fileName;
+            file_put_contents($savePath, $image);
+
+            $bannerPath = '/uploads/' . $fileName;
+        }
+
         if ($name === '') {
             $this->render('board_create', ['mode'=>'edit','boardId'=>$boardId,'error'=>'Board name is required.','old'=>['name'=>$name,'description'=>$desc]]);
             return;
         }
 
-        $ok = Board::updateOwned($boardId, (int)$_SESSION['uid'], $name, $desc);
+        $ok = Board::updateOwned($boardId, (int)$_SESSION['uid'], $name, $desc, $bannerPath);
         if (!$ok) { http_response_code(403); echo 'Not allowed or board missing'; return; }
         header('Location: /board?id=' . $boardId); exit;
     }
