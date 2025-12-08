@@ -9,12 +9,12 @@
   if (is_file($themeInit)) {
     include $themeInit;
   } ?>
-
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/css/custom.css?v=20251103b" rel="stylesheet">
+  <link href="/css/custom.css" rel="stylesheet">
+  
 </head>
 
 <body class="bg-body">
@@ -75,7 +75,7 @@
       <div class="row g-3">
         <?php foreach ($boards as $b): ?>
           <div class="col-12 col-md-6">
-            <a class="card text-decoration-none h-100" href="/board?id=<?= (int) $b['id'] ?>">
+            <a class="card text-decoration-none h-100 board-card" href="/board?id=<?= (int) $b['id'] ?>">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="card-title mb-0"><?= htmlspecialchars($b['name']) ?></h6>

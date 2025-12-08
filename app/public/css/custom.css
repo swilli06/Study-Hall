@@ -121,3 +121,23 @@ a.login-link:hover {
   border-radius: 0.375rem !important;
   box-shadow: none !important;
 }
+
+/* Base styles for the board card link */
+    .board-card {
+      transition: all 0.2s ease-in-out; /* Smooth transition for hover effects */
+      border: 1px solid var(--bs-card-border-color); /* Ensure border is visible for shadow effect */
+    }
+
+    /* Hover effect: lift the card and change the background */
+    .board-card:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; /* Larger shadow to "lift" the card */
+      transform: translateY(-3px); /* Slightly move the card up */
+      background-color: var(--bs-light); /* Optional: slight background change */
+      border-color: rgba(0, 0, 0, 0.1); /* Optional: subtle border change */
+    }
+    
+    /* Ensure the card text stays visible on hover */
+    .board-card:hover .card-text,
+    .board-card:hover .card-title {
+      color: inherit !important; /* Prevents text color from changing if the link color changes */
+    }
