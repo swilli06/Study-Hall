@@ -60,7 +60,7 @@
           <div class="d-flex mb-1 justify-content-between align-items-center">
             <button type="button" id="themeToggle" class="btn btn-med border" title="Toggle Theme">
               <i id="themeIcon" class="bi bi-moon-stars me-1"></i>
-              <span id="themeText">Toggle dark/light mode</span>"
+              <span id="themeText">Toggle dark/light mode</span>
             </button>
           </div>
 
