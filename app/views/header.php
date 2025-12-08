@@ -22,45 +22,47 @@ $excludeHeader = [
 
 <link rel="stylesheet" href="/css/header.css">
 
-<nav class="navbar navbar-dark bg-dark">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
 
-    <?php if (!in_array($currentPath, $excludeHeader, true)): ?>
-        <!-- Navbar brand -->
-        <a class="navbar-brand" href="/dashboard">
-            <img src="/images/SHIcon.png" alt="Study Hall" height="50">
-        </a>
-
-        <!-- Right-side buttons -->
-        <div class="d-flex ms-auto align-items-center">
-            <!-- Message Notifications -->
-            <a href="/messages" class="notification-bell me-3 text-light">
-                <i class="bi bi-bell-fill"></i>
-                <span class="notification-indicator" style="display: none;"></span>
+        <?php if (!in_array($currentPath, $excludeHeader, true)): ?>
+            <!-- Navbar brand -->
+            <a class="navbar-brand" href="/dashboard">
+                <img src="/images/SHIcon.png" alt="Study Hall" height="50">
             </a>
 
-            <!-- Standard nav actions (profile-page style everywhere) -->
-            <a href="/messages" class="btn btn-outline-light btn-sm me-2" title="Messages">
-                <i class="bi bi-chat-fill"></i>
-            </a>
-            <a href="/logout" class="btn btn-outline-light btn-sm me-2" title="Logout">
-                <i class="bi bi-box-arrow-right"></i>
-            </a>
-            <!-- Theme toggle button ALWAYS visible -->
-            <button id="themeToggle" class="btn btn-outline-light btn-sm me-3" title="Toggle Theme">
-            <i id="themeIcon" class="bi bi-moon-stars"></i>
-            </button>
-            <a href="/profile" title="Profile">
-                <img
-                    src="<?= htmlspecialchars($profilePicUrl ?? '/images/default-avatar.jpg') ?>"
-                    alt="Profile Picture"
-                    class="rounded-circle"
-                    style="width:40px; height:40px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);"
-                >
-            </a>
-        </div>
-    <?php endif; ?>
-  </div>
+            <!-- Right-side buttons -->
+            <div class="d-flex ms-auto align-items-center navbar-nav flex-row">
+                <!-- Message Notifications -->
+                <a href="/messages" class="notification-bell me-3 text-body">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="notification-indicator" style="display: none;"></span>
+                </a>
+
+                <div class="dropdown">
+                    <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Account Menu">
+                        <img src="<?= htmlspecialchars($profilePicUrl ?? '/images/default-avatar.jpg') ?>"
+                            alt="Profile Picture" class="rounded-circle profile-pic-border"
+                            style="width:40px; height:40px; object-fit: cover; cursor: pointer;">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="/profile">
+                                <i class="bi bi-person-circle me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="/messages">
+                                <i class="bi bi-chat-fill me-2"></i> Messages
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="/logout">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
 </nav>
 
 <script src="/js/header.js"></script>

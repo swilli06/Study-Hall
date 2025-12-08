@@ -31,3 +31,25 @@
     background-color: var(--bs-card-bg) !important;
     border-color: var(--bs-border-color) !important;
 }
+.bg-body[data-bs-theme="dark"] .navbar {
+    /* Forces a light background color for the navbar itself */
+    background-color: var(--bs-light) !important;
+    border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+.bg-body[data-bs-theme="dark"] .navbar .text-body {
+    /* Ensures notification bell text/icon is dark on the light navbar background */
+    color: var(--bs-dark) !important;
+}
+
+.bg-body[data-bs-theme="dark"] .navbar .btn-outline-secondary {
+    /* Ensures buttons look good on the light navbar */
+    color: var(--bs-dark);
+    border-color: var(--bs-dark);
+}
+
+.bg-body[data-bs-theme="dark"] .navbar .btn-outline-secondary:hover {
+    /* Hover state for buttons */
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+}
