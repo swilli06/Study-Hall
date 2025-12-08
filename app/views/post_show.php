@@ -146,32 +146,19 @@ $csrf = function_exists('csrf_token') ? csrf_token() : $_SESSION['csrf'];
 
     <div class="card border-0 shadow-sm mb-4" id="aiCommentCard">
       <div class="card-header d-flex">
-        <button class="btn btn-link me-3 p-0 tab-btn active" data-target="aiPanel">
-          <i class="bi bi-robot me-1"></i> Ask AI
-        </button>
-        <button class="btn btn-link p-0 tab-btn" data-target="commentPanel">
+        <button class="btn btn-link p-0 tab-btn active" data-target="commentPanel">
           <i class="bi bi-chat-left-text me-1"></i> Add Comment
         </button>
+        <button class="btn btn-link me-3 p-0 tab-btn" data-target="aiPanel">
+          <i class="bi bi-robot me-1"></i> Ask AI
+        </button>
+        
       </div>
 
       <div class="card-body" style="min-height: 200px;">
 
-        <!-- AI PANEL (visible by default) -->
-        <div id="aiPanel" class="swap-panel active">
-          <div class="mb-3">
-            <textarea class="form-control" id="aiQuestion" rows="3" placeholder="Ask something about this post…"></textarea>
-          </div>
-          <button class="btn btn-outline-primary" id="askAiBtn">
-            <i class="bi bi-robot"></i> Ask AI
-          </button>
-
-          <div class="mt-3 d-none" id="aiResponseBox">
-            <div class="alert alert-secondary" id="aiResponse"></div>
-          </div>
-        </div>
-
-        <!-- COMMENT PANEL (hidden initially) -->
-        <div id="commentPanel" class="swap-panel d-none">
+        <!--COMMENT PANEL-->
+        <div id="commentPanel" class="swap-panel active">
           <?php if ($error): ?>
             <div class="alert alert-danger shadow-sm"><?= h($error) ?></div>
           <?php endif; ?>
@@ -187,13 +174,29 @@ $csrf = function_exists('csrf_token') ? csrf_token() : $_SESSION['csrf'];
           </form>
         </div>
 
+        <!--AI PANEL-->
+        <div id="aiPanel" class="swap-panel d-none">
+          <div class="mb-3">
+            <textarea class="form-control" id="aiQuestion" rows="3" placeholder="Ask something about this post…"></textarea>
+          </div>
+          <button class="btn btn-outline-primary" id="askAiBtn">
+            <i class="bi bi-robot"></i> Ask AI
+          </button>
+
+          <div class="mt-3 d-none" id="aiResponseBox">
+            <div class="alert alert-secondary" id="aiResponse"></div>
+          </div>
+        </div>
+
+        
+
       </div>
     </div>
 
 
   </div>
 
-  <script src="/js/tpostCommentsAI.js"></script>
+  <script src="/js/postCommentsAI.js"></script>
   <script src="/js/theme-init.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
