@@ -7,168 +7,180 @@ declare(strict_types=1);
 /** @var int    $page */
 /** @var int    $limit */
 
-function h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-$build = function($n){ $qv = $_GET; $qv['page'] = $n; return '/search?'.http_build_query($qv); };
-$prev = max(1, (int)$page - 1);
-$next = (int)$page + 1;
+function h($s)
+{
+  return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+}
+$build = function ($n) {
+  $qv = $_GET;
+  $qv['page'] = $n;
+  return '/search?' . http_build_query($qv);
+};
+$prev = max(1, (int) $page - 1);
+$next = (int) $page + 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Search · Study Hall</title>
 
-  <?php
-  $themeInit = __DIR__ . '/theme-init.php';
-  if (is_file($themeInit)) include $themeInit;
-  ?>
+  <?php $themeInit = __DIR__ . '/theme-init.php';
+  if (is_file($themeInit)) {
+    include $themeInit;
+  } ?>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="/css/custom.css" rel="stylesheet">
   <link href="/css/search.css" rel="stylesheet">
 </head>
+
 <body class="bg-body">
 
-<?php
+  <?php
   $hdr = __DIR__ . '/header.php';
-  if (is_file($hdr)) include $hdr;
-?>
+  if (is_file($hdr))
+    include $hdr;
+  ?>
 
-<section class="py-4">
-  <div class="container" style="max-width:1000px;">
-    <h3 class="fw-semibold mb-3">Search</h3>
+  <section class="py-4">
+    <div class="container" style="max-width:1000px;">
+      <h3 class="fw-semibold mb-3">Search</h3>
 
-    <!-- Search bar -->
-    <form class="row g-2 align-items-center mb-4" method="GET" action="/search">
-      <div class="col-12 col-md-8">
-        <input class="form-control" name="q" placeholder="Search posts, users, or tags…" value="<?= h($q ?? '') ?>">
-      </div>
-      <div class="col-6 col-md-2">
-        <select class="form-select" name="type" aria-label="Result type" onchange="toggleTagField()">
-          <option value="posts" <?= ($type==='posts')?'selected':''; ?>>Posts</option>
-          <option value="users" <?= ($type==='users')?'selected':''; ?>>Users</option>
-          <option value="tags"  <?= ($type==='tags') ?'selected':''; ?>>Tags</option>
-        </select>
-      </div>
-      <div class="col-12 col-md-2 d-grid">
-        <button class="btn btn-orange">
-          <i class="bi bi-search"></i>
-        </button>
-      </div>
-    </form>
+      <!-- Search bar -->
+      <form class="row g-2 align-items-center mb-4" method="GET" action="/search">
+        <div class="col-12 col-md-8">
+          <input class="form-control" name="q" placeholder="Search posts, users, or tags…" value="<?= h($q ?? '') ?>">
+        </div>
+        <div class="col-6 col-md-2">
+          <select class="form-select" name="type" aria-label="Result type" onchange="toggleTagField()">
+            <option value="posts" <?= ($type === 'posts') ? 'selected' : ''; ?>>Posts</option>
+            <option value="users" <?= ($type === 'users') ? 'selected' : ''; ?>>Users</option>
+            <option value="tags" <?= ($type === 'tags') ? 'selected' : ''; ?>>Tags</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2 d-grid">
+          <button class="btn btn-orange">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
 
-  <!-- Results -->
-  <?php if ($type === 'posts'): ?>
-    <?php if (empty($results)): ?>
-      <div class="alert alert-light border">No posts found.</div>
-    <?php else: ?>
-      <div class="list-group shadow-sm">
-        <?php foreach ($results as $r): ?>
-          <div class="list-group-item search-card">
-            <a href="/post?id=<?= (int)$r['id'] ?>" class="stretched-link text-decoration-none text-reset">
-              <div class="d-flex w-100 justify-content-between">
-                <h6 class="mb-1"><?= h($r['title']) ?></h6>
-                <small class="text-muted"><?php
-                  if (!empty($r['created_at'])) {
+      <!-- Results -->
+      <?php if ($type === 'posts'): ?>
+        <?php if (empty($results)): ?>
+          <div class="alert alert-light border">No posts found.</div>
+        <?php else: ?>
+          <div class="list-group shadow-sm">
+            <?php foreach ($results as $r): ?>
+              <div class="list-group-item search-card">
+                <a href="/post?id=<?= (int) $r['id'] ?>" class="stretched-link text-decoration-none text-reset">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1"><?= h($r['title']) ?></h6>
+                    <small class="text-muted"><?php
+                    if (!empty($r['created_at'])) {
                       $dt = new DateTime($r['created_at']);
                       echo htmlspecialchars($dt->format('F j, Y g:i A'));
-                  }
-                  ?></small>
+                    }
+                    ?></small>
+                  </div>
+                  <?php if (!empty($r['author'])): ?>
+                    <div class="small text-muted mb-1">by <?= h($r['author']) ?></div>
+                  <?php endif; ?>
+                  <?php if (!empty($r['body'])): ?>
+                    <p class="mb-1 text-muted"><?= h(mb_strimwidth((string) $r['body'], 0, 160, '…')) ?></p>
+                  <?php endif; ?>
+                </a>
+                <?php if (!empty($r['tags'])): ?>
+                  <div class="mt-1">
+                    <?php foreach ($r['tags'] as $t): ?>
+                      <a class="badge rounded-pill text-bg-light border me-1 text-decoration-none"
+                        href="/search?type=posts&tag=<?= urlencode($t['slug']) ?>">
+                        #<?= h($t['name']) ?>
+                      </a>
+                    <?php endforeach; ?>
+                  </div>
+                <?php endif; ?>
               </div>
-              <?php if (!empty($r['author'])): ?>
-                <div class="small text-muted mb-1">by <?= h($r['author']) ?></div>
-              <?php endif; ?>
-              <?php if (!empty($r['body'])): ?>
-                <p class="mb-1 text-muted"><?= h(mb_strimwidth((string)$r['body'], 0, 160, '…')) ?></p>
-              <?php endif; ?>
-            </a>
-            <?php if (!empty($r['tags'])): ?>
-              <div class="mt-1">
-                <?php foreach ($r['tags'] as $t): ?>
-                  <a class="badge rounded-pill text-bg-light border me-1 text-decoration-none"
-                    href="/search?type=posts&tag=<?= urlencode($t['slug']) ?>">
-                    #<?= h($t['name']) ?>
-                  </a>
-                <?php endforeach; ?>
-              </div>
-            <?php endif; ?>
+            <?php endforeach; ?>
           </div>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
+        <?php endif; ?>
 
-    <?php elseif ($type === 'users'): ?>
-      <?php if (empty($results)): ?>
-        <div class="alert alert-light border">No users found.</div>
-      <?php else: ?>
-        <div class="row g-3">
-          <?php foreach ($results as $u): ?>
-            <div class="col-12 col-md-6">
-              <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                  <h6 class="card-title mb-1"><?= h($u['username'] ?: $u['email']) ?></h6>
-                  <div class="text-muted small mb-3">
-                    Joined <?php
-                  if (!empty($u['created_at'])) {
-                      $dt = new DateTime($u['created_at']);
-                      echo htmlspecialchars($dt->format('F j, Y g:i A'));
-                  }
-                  ?>• <?= h($u['email']) ?>
-                  </div>
-                  <div class="mt-auto">
-                    <a href="/profile?id=<?= (int)$u['id'] ?>"
-                      class="btn btn-sm btn-outline-primary w-100">
-                      <i class="bi bi-person"></i> View Profile
-                    </a>
+      <?php elseif ($type === 'users'): ?>
+        <?php if (empty($results)): ?>
+          <div class="alert alert-light border">No users found.</div>
+        <?php else: ?>
+          <div class="row g-3">
+            <?php foreach ($results as $u): ?>
+              <div class="col-12 col-md-6">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="card-title mb-1"><?= h($u['username'] ?: $u['email']) ?></h6>
+                    <div class="text-muted small mb-3">
+                      Joined <?php
+                      if (!empty($u['created_at'])) {
+                        $dt = new DateTime($u['created_at']);
+                        echo htmlspecialchars($dt->format('F j, Y g:i A'));
+                      }
+                      ?>• <?= h($u['email']) ?>
+                    </div>
+                    <div class="mt-auto">
+                      <a href="/profile?id=<?= (int) $u['id'] ?>" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="bi bi-person"></i> View Profile
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
 
 
-    <?php else: ?>
-      <?php if (empty($results)): ?>
-        <div class="alert alert-light border">No tags found.</div>
       <?php else: ?>
-        <div class="row g-3">
-          <?php foreach ($results as $t): ?>
-            <div class="col-12 col-sm-6 col-lg-4">
-              <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                  <h6 class="card-title mb-1">
-                    <span class="text-decoration-none text-body-secondary">#<?= h($t['name']) ?></span>
-                  </h6>
-                  <div class="text-muted small mb-3"><?= (int)($t['usage_count'] ?? 0) ?> posts</div>
-                  <div class="mt-auto d-flex gap-2">
-                    <a class="btn btn-sm btn-outline-primary flex-fill" href="/search?type=posts&tag=<?= urlencode($t['slug']) ?>">Filter posts</a>
+        <?php if (empty($results)): ?>
+          <div class="alert alert-light border">No tags found.</div>
+        <?php else: ?>
+          <div class="row g-3">
+            <?php foreach ($results as $t): ?>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="card-title mb-1">
+                      <span class="text-decoration-none text-body-secondary">#<?= h($t['name']) ?></span>
+                    </h6>
+                    <div class="text-muted small mb-3"><?= (int) ($t['usage_count'] ?? 0) ?> posts</div>
+                    <div class="mt-auto d-flex gap-2">
+                      <a class="btn btn-sm btn-outline-primary flex-fill"
+                        href="/search?type=posts&tag=<?= urlencode($t['slug']) ?>">Filter posts</a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       <?php endif; ?>
-    <?php endif; ?>
 
-    <!-- Pager -->
-    <nav class="mt-3">
-      <ul class="pagination">
-        <li class="page-item <?= ($page<=1)?'disabled':''; ?>">
-          <a class="page-link" href="<?= h($build($prev)) ?>">Prev</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="<?= h($build($next)) ?>">Next</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</section>
+      <!-- Pager -->
+      <nav class="mt-3">
+        <ul class="pagination">
+          <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+            <a class="page-link" href="<?= h($build($prev)) ?>">Prev</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="<?= h($build($next)) ?>">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
 
-<script src="/js/search.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/theme-init.js"></script>
+  <script src="/js/search.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
