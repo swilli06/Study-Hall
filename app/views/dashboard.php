@@ -141,16 +141,7 @@
   </div>
 <?php endif; ?>
 
-<script>
-  function toggleTagField() {
-    const sel = document.querySelector('select[name="type"]');
-    const tag = document.getElementById('tagField');
-    if (!sel || !tag) return;
-    tag.disabled = (sel.value !== 'posts');
-  }
-  document.addEventListener('DOMContentLoaded', toggleTagField);
-</script>
-
+<script src="/js/dashboard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

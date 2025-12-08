@@ -29,17 +29,6 @@
               <textarea id="bio" name="bio" class="form-control" maxlength="200"> </textarea>
                <small id="bioCounter" class="form-text text-muted">0/200</small>
             </div>
-                  <script>
-                      const bio = document.getElementById('bio');
-                      const counter = document.getElementById('bioCounter');
-                      const maxLength = bio.getAttribute('maxlength');
-                      bio.addEventListener('input', () => {
-                      const currentLength = bio.value.length;
-                       counter.textContent = `${currentLength}/${maxLength}`;
-                       });
-                    </script>
-            
-
               <div class="mb-3">
                 <label class="form-label">Profile Picture (optional)</label>
                 <input class="form-control" type="file" name="profile_picture" accept="image/*">
@@ -74,5 +63,6 @@
   </div>
 </div>
 
+<script src="/js/register.js"></script>
 </body>
 </html>

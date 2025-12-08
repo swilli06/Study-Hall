@@ -20,10 +20,10 @@
 
           <form method="POST" action="/login">
             <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-            <!-- Email -->
+            <!-- Email or Username -->
             <div class="form-outline mb-4">
-              <input type="email" id="email" name="email" class="form-control" required />
-              <label class="form-label" for="email">Email address</label>
+              <input type="text" id="identifier" name="identifier" class="form-control" required />
+              <label class="form-label" for="identifier">Email or Username</label>
             </div>
 
             <!-- Password -->

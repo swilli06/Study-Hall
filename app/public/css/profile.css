@@ -1,0 +1,11 @@
+[data-bs-theme="dark"] .bg-body-secondary {
+  background-color: #2c2c2c !important;
+}
+
+[data-bs-theme="dark"] .border-secondary {
+  border-color: #444 !important;
+}
+
+.ratio img {
+  object-fit: cover;
+}

@@ -16,11 +16,25 @@ class LoginController extends BaseController {
             return;
         }
 
-        $email = trim(strtolower($_POST['email'] ?? ''));
+        $identifierRaw = trim($_POST['identifier'] ?? '');
         $pass  = $_POST['password'] ?? '';
 
         $userModel = new User($this->db);
-        $user = $userModel->findByEmail($email);
+
+        if ($identifierRaw === '') {
+            $this->render('login', ['error' => 'Please provide an email or username']);
+            return;
+        }
+
+        // Try email first if it looks like one; otherwise username, then fallback to email
+        $user = null;
+        if (filter_var($identifierRaw, FILTER_VALIDATE_EMAIL)) {
+            $user = $userModel->findByEmail(strtolower($identifierRaw));
+        } else {
+            $user = $userModel->findByUsername($identifierRaw)
+                ?? $userModel->findByEmail(strtolower($identifierRaw));
+        }
+        
 
         if ($user && password_verify($pass, $user['password_hash'])) {
             $_SESSION['uid'] = $user['id'];
