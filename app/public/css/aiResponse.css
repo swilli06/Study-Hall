@@ -1,0 +1,23 @@
+/*Post Comment */
+
+.swap-panel {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.swap-panel.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tab-btn {
+  border: none;
+  font-weight: 500;
+  color: #adb5bd; /* tweak if you want */
+}
+
+.tab-btn.active {
+  color: #0d6efd;
+  text-decoration: underline;
+}
