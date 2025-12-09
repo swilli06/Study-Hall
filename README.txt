@@ -1,4 +1,4 @@
-Study Hall (Dockerized LAMP)
+Study Hall
 ----------------------------
 
 Quick start
