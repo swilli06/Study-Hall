@@ -5,7 +5,6 @@ _A lightweight board & post-based discussion platform for teams, classes, and co
   <img src="https://img.shields.io/badge/PHP-8.1+-777BB4?logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/MariaDB-10.5+-003545?logo=mariadb&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
 ---
