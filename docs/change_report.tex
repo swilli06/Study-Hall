@@ -1,0 +1,109 @@
+\documentclass[10pt,titlepage]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{spverbatim}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage[letterpaper, margin=1.25in]{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usetikzlibrary{trees}
+
+\lstdefinestyle{mystyle}{
+  keywordstyle=\color{blue},
+  commentstyle=\color{red},
+  stringstyle=\color{violet},
+  basicstyle=\fontsize{12}{12},
+  columns=fullflexible,
+  breaklines=true
+}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+
+\lstset{style=mystyle}
+
+\title{Study Hall Fork -- Change Report}
+\author{Abraham Sharum, Parker Fletcher, Bryson Dye, Seth Williams \\ Class: CSCE 43603 -- Software Engineering}
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LE,LO]{\textbf{CSCE 43603 -- Software Engineering}}
+\fancyhead[RO,RE]{\textbf{Study Hall Change Report}}
+\fancyfoot{}
+\fancyfoot[CE,CO]{\textbf{\thepage}}
+\maketitle
+
+\section*{Overview}
+Summary of changes relative to upstream main: stabilize setup, clarify docs, tidy layout for env/upload handling, and add functional features (AI-assisted comments, messaging/UI updates, banner uploads).
+
+\section*{Setup}
+\begin{itemize}
+  \item Setup is straightforward, add the root \texttt{.env} and run \texttt{docker compose up --build -d}.
+  \item Existing instructions were sufficient once env vars were supplied.
+\end{itemize}
+
+\section*{Documentation}
+\begin{itemize}
+  \item Documentation was light but clear, the workflow was simple enough that minimal docs covered setup.
+\end{itemize}
+
+\section*{Design Critique}
+\begin{itemize}
+  \item Repository structure is mostly sound. Controllers, models, and views are separated. Assets live under \texttt{app/public}.
+  \item Strict typing helps avoid data mismatches.
+  \item Original views embedded CSS/JS, separating assets improved readability and reuse.
+\end{itemize}
+
+\section*{Source Code and Configuration}
+
+\subsection*{Repository Layout Changes}
+\begin{itemize}
+  \item Established persistent upload path \texttt{app/public/uploads} for board banner images.
+  \item Separated JS/CSS into dedicated asset files instead of embedding in PHP views, improving modularity and reusability
+  \item Expanded \texttt{README.txt} to include setup, env checklist, DB reset/reseed instructions, Adminer access, and upload directory guidance.
+\end{itemize}
+
+\subsection*{Functional Changes}
+\begin{itemize}
+  \item \textbf{Board banner uploads}: \texttt{app/controllers/BoardController.php} now creates the uploads directory at runtime, checks writability, and handles write failures. \texttt{app/views/board\_create.php} updated to support banner submission.
+  \item \textbf{AI comment assistance}: New PHP endpoint and client JS/CSS (\texttt{app/ai/aiCommentResponse.php}, \texttt{app/ai/ai.js}, \texttt{app/public/js/postCommentsAI.js}) to generate AI responses to post comments.
+  \item \textbf{Messaging and UI updates}: Significant CSS/JS/view changes across messaging, dashboard, profile, header, and chat (\texttt{app/public/css/messages.css}, \texttt{app/public/js/messages.js}, and related view templates).
+  \item \textbf{Schema tweak}: Minor addition in \texttt{sql/00\_schema.sql} (index/full-text change).
+  \item \textbf{Navigation/header refinements}: Updates in \texttt{app/views/header.php} and supporting assets to improve layout and links.
+\end{itemize}
+
+\subsection*{UI/UX Changes}
+\begin{itemize}
+  \item \textbf{Light/Dark toggle}: Moved toggle into profile settings, labeled clearly, increased hit area, and adjusted text colors for both themes. JS updated to match new IDs/classes, improve readability, and set button borders (black in light mode, white in dark). \texttt{theme\_init} variables corrected and includes/scripts placed before other CSS and at page footers where needed.
+  \item \textbf{Board card hover}: Simplified card markup for better selectors and added hover styling in \texttt{custom.css}, with color adjustments per theme.
+  \item \textbf{Navbar declutter}: Logo anchored left; messages and profile remain right with a Bootstrap dropdown for profile actions. Dropdown styled for clarity with a separator emphasizing logout.
+\end{itemize}
+
+\subsection*{Setup / Infrastructure}
+\begin{itemize}
+  \item Environment is reproducible with root \texttt{.env}; DB starts cleanly and seeds via \texttt{sql/00\_schema.sql} and \texttt{sql/10\_seed.sql}.
+  \item Uploads path documented and permissions clarified; runtime checks prevent PHP warnings from breaking redirects.
+  \item README now documents DB reset/reseed and Adminer connection details.
+\end{itemize}
+
+\section*{Documentation Updates}
+\begin{itemize}
+  \item \texttt{README.txt} now contains quick-start, env variable checklist, DB reset/reseed commands, Adminer usage, and project layout overview.
+  \item Inline errors in banner upload flow now explain permission issues instead of emitting warnings.
+  \item Added \texttt{docs/AI.md} describing the AI comment helper endpoint (route, request/response shape, frontend usage, and configuration).
+\end{itemize}
+
+\section*{Reflection Document}
+
+\begin{itemize}
+	\item Overall the project was easy to work on. Barring the baked in CSS/JS into each view adding features and working in the code base was pretty simple to grasp. There was light documentation that proved helpful and the setup of the project itself took no less than 10 minutes
+\end{itemize}
+
+
+\end{document}

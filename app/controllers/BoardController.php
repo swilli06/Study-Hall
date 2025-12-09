@@ -86,8 +86,18 @@ class BoardController extends BaseController
             $image = base64_decode($data);
 
             $fileName = 'board_' . uniqid() . '.png';
-            $savePath = __DIR__ . '/../public/uploads/' . $fileName;
-            file_put_contents($savePath, $image);
+            $uploadDir = __DIR__ . '/../public/uploads';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+            if (!is_writable($uploadDir)) { @chmod($uploadDir, 0777); }
+            if (!is_writable($uploadDir)) {
+                $this->render('board_create', ['mode'=>'create','error'=>'Upload folder is not writable.','old'=>['name'=>$name,'description'=>$desc]]);
+                return;
+            }
+            $savePath = $uploadDir . '/' . $fileName;
+            if (file_put_contents($savePath, $image) === false) {
+                $this->render('board_create', ['mode'=>'create','error'=>'Unable to save banner image.','old'=>['name'=>$name,'description'=>$desc]]);
+                return;
+            }
 
             $bannerPath = '/uploads/' . $fileName;
         }
@@ -144,8 +154,18 @@ class BoardController extends BaseController
             $image = base64_decode($data);
 
             $fileName = 'board_' . uniqid() . '.png';
-            $savePath = __DIR__ . '/../public/uploads/' . $fileName;
-            file_put_contents($savePath, $image);
+            $uploadDir = __DIR__ . '/../public/uploads';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+            if (!is_writable($uploadDir)) { @chmod($uploadDir, 0777); }
+            if (!is_writable($uploadDir)) {
+                $this->render('board_create', ['mode'=>'edit','boardId'=>$boardId,'error'=>'Upload folder is not writable.','old'=>['name'=>$name,'description'=>$desc]]);
+                return;
+            }
+            $savePath = $uploadDir . '/' . $fileName;
+            if (file_put_contents($savePath, $image) === false) {
+                $this->render('board_create', ['mode'=>'edit','boardId'=>$boardId,'error'=>'Unable to save banner image.','old'=>['name'=>$name,'description'=>$desc]]);
+                return;
+            }
 
             $bannerPath = '/uploads/' . $fileName;
         }
